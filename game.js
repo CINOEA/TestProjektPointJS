@@ -11,6 +11,8 @@ pjs.keyControl.initKeyControl();
 
 var jump = 0;
 var jumpM = 0;
+var fall = false;
+
 var fon1 = game.newImageObject({
  x : 0, y : 0,
  file : 'imgs/fon.jpg',
@@ -52,7 +54,10 @@ var dog = game.newAnimationObject({
 var JumpMethod = function(){
     jump += jumpM;
     jumpM += 0.5;
-
+    if(jump<-150)
+        fall = true;
+    if(jump>=0)
+     fall = false;
     //if(jump<-100)
       //  jumpM = 10;
 
@@ -66,12 +71,6 @@ var moveBackGround = function (s) {
 
     gr1.move(point(-s, 0));
     gr2.move(point(-s, 0));
-
-
-    if(pjs.keyControl.isDown('SPACE') && (jump>=-100))
-        jumpM = -10;
-
-    JumpMethod();
 
     if (fon1.x + fon1.w < 0) {
         fon1.x = fon2.x+fon2.w;
@@ -99,12 +98,15 @@ game.newLoop('game', function () {
     gr1.draw();
     gr2.draw();
 
+    if(pjs.keyControl.isDown('SPACE') && (jump>=-150) && !fall)
+        jumpM = -10;
+
+    JumpMethod();
+
     dog.y = -dog.h + gr1.y + gr1.h /2.7 + jump;
     dog.draw();
 
     moveBackGround(4);
-
-    
 
 });
 
